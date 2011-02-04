@@ -397,7 +397,15 @@ class Facebook
     if ($session) {
       return $session['access_token'];
     } else {
-      return $this->getAppId() .'|'. $this->getApiSecret();
+        $url = $this->getUrl('graph', 'oauth/access_token');
+        $params = array('client_id' => $this->getAppId(), 'client_secret' => $this->getApiSecret(), 'grant_type' => 'client_credentials');
+        $access_token = $this->makeRequest($url, $params);
+        $token = explode("=", $access_token);
+        if (isset($token[1]))
+        {
+            return $token[1];
+        }
+        return false;
     }
   }
 
